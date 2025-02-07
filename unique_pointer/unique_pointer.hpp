@@ -16,18 +16,27 @@ public:
     unique_pointer& operator=(const unique_pointer& rhs) = delete;
 
     // Move semantics
-    unique_pointer(unique_pointer&& rhs);
-    unique_pointer& operator=(unique_pointer&& rhs);
+    unique_pointer(unique_pointer&& rhs) noexcept;
+    unique_pointer& operator=(unique_pointer&& rhs) noexcept;
 
     // Destructor
     ~unique_pointer();
 
 public:
     // dereferences pointer to the managed object
-    T* operator->() const;
-    T& operator*() const;
+    T* operator->() const noexcept;
+    T& operator*() const noexcept;
+
+    // modifiners
+    T* release() noexcept; // returns a pointer to the managed object and releases the ownership
+    void reset(T* ptr) noexcept; // replaces the managed object
+    void swap(unique_pointer<T>& other) noexcept; // swaps the managed objects
+
+    // observers
+    T* get() const noexcept; // returns a pointer to the managed object
+
 private:
-    int* m_ptr = nullptr;
+    T* m_ptr = nullptr;
 };
 
 } // namespace custom_smart_pointer
